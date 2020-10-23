@@ -27,11 +27,16 @@ public class MemberRepository {
         return em.find(Member.class, id);
     }
 
+    public List<Member> findMembers() {
+      return em.createQuery("select m from Member m", Member.class).getResultList();
+    }
+
     @Transactional
-    void jpaMain(Member member) {
+    public Member jpaMain(Member member) {
         member.setUsername("MemberA");
         member.setAge(20);
         em.persist(member);
+        return member;
 //		em.remove(member);
     }
 

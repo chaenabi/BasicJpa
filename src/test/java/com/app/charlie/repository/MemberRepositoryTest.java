@@ -20,9 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 class MemberRepositoryTest {
 
-    @PersistenceContext
-    private EntityManager em;
-
     @Autowired
     MemberRepository memberRepository;
 
@@ -42,19 +39,15 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(value = false)
     public void testMember2() throws Exception {
         // provided resource
         Member member = new Member();
         // when if
-        memberRepository.jpaMain(member);
-        Member findMember = em.find(Member.class, 1L);
-        System.out.println("findMember = " + findMember.getUsername() + ", age = " + findMember.getAge());
-
-        //목록 조회
-        List<Member> members = em.createQuery("select m from Member m", Member.class).getResultList();
-        System.out.println("members.size() = " + members.size());
+        member = memberRepository.jpaMain(member);
+        Member findMember = memberRepository.find(1L);
+ //     System.out.println("findMember = " + findMember.getUsername() + ", age = " + findMember.getAge());
+        //       List<Member> members = memberRepository.findMembers();
+//      System.out.println("members.size() = " + members.size());
 
         // validate it.
         assertThat(findMember.getId()).isEqualTo(member.getId());
