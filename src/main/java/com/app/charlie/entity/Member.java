@@ -1,30 +1,37 @@
 package com.app.charlie.entity;
 
+
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
+import lombok.ToString;
 
 import javax.persistence.*;
 
-@Setter
-@Getter
 @Entity
-@Table(name="MEMBER")
+@ToString
+@Getter @Setter
 public class Member {
 
-    @Id
-    @NonNull
-    @GeneratedValue
-    @Column(name = "ID")
+    @Id @GeneratedValue
+    @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "NAME")
-    private String username;
+    @Column
+    private String name;
 
-    @Column(name = "AGE")
-    private Integer age;
+    @Column
+    private int age;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
-
+    public void setTeam(Team team) {
+        this.team = team;
+        //무한 루프에 빠지지 않도록 체크
+        if(!team.getMembers().contains(this)) {
+            team.addMember(this);
+        }
+    }
 }
+
